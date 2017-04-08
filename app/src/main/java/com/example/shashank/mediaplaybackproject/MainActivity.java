@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Song> listSong=new ArrayList<>();
     RecyclerView rv;
     public static final String TAG="SONG";
-    FloatingActionButton stop;
+    ImageButton stop;
     ImageButton next,prev;
     MediaPlayer player;
     boolean playing=false;
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         rv=(RecyclerView)findViewById(R.id.body);
-        stop=(FloatingActionButton)findViewById(R.id.stop);
+        stop=(ImageButton)findViewById(R.id.stop);
         next=(ImageButton)findViewById(R.id.next);
         prev=(ImageButton)findViewById(R.id.prev);
 
@@ -253,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         seektime=0;
-                      //  playSong(s.getDATA(),p,0);
+                        playSong(s.getDATA(),p,0);
                         RemoteViews notificationView=new RemoteViews(getPackageName(),R.layout.notification);
                    //     notificationView.setImageViewBitmap(R.id.album_art, BitmapFactory.decodeFile(coverArt));
                         }
