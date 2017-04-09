@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.splash);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         rv=(RecyclerView)findViewById(R.id.body);
         stop=(ImageButton)findViewById(R.id.stop);
