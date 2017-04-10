@@ -18,6 +18,15 @@ public class SuggestFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static SuggestFragment newInstance() {
+        
+        Bundle args = new Bundle();
+        
+        SuggestFragment fragment = new SuggestFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

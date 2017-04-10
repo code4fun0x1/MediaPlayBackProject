@@ -38,6 +38,127 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_gravity="bottom"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardElevation="7dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <SeekBar
+                android:id="@+id/seekBar"
+                style="@android:style/Widget.Material.SeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_margin="0dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:max="100"
+                android:progress="0"
+                android:progressBackgroundTint="@color/colorPrimary"
+                android:thumb="@color/colorAccent" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="56">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="4dp"
+                            android:src="@drawable/splash" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:layout_width="fill_parent"
+                                    android:textSize="18sp"
+                                    android:maxLines="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="Papercut" />
+
+                                <TextView
+                                    android:maxLines="1"
+                                    android:layout_width="fill_parent"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:layout_height="wrap_content"
+                                    android:text="Linkin Park" />
+                            </LinearLayout>
+                        </FrameLayout>
+                    </LinearLayout>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:paddingRight="8dp"
+                    android:layout_weight="45">
+
+
+                    <ImageButton
+                        android:id="@+id/prev"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:elevation="2dp"
+                        android:focusable="true"
+                        android:src="@drawable/ic_skip_previous_black_48dp" />
+
+                    <ImageButton
+
+                        android:id="@+id/next"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:elevation="2dp"
+                        android:focusable="true"
+                        android:src="@drawable/ic_skip_next_black_48dp"
+
+                        />
+
+                    <ImageButton
+                        android:id="@+id/stop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/ic_play_arrow_black_48dp" />
+
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 
 

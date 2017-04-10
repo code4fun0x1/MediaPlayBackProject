@@ -18,6 +18,14 @@ public class AlbumInfoFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static AlbumInfoFragment newInstance() {
+        
+        Bundle args = new Bundle();
+        
+        AlbumInfoFragment fragment = new AlbumInfoFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
