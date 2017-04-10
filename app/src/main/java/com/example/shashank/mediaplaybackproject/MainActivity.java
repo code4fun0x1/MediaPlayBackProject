@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     int seektime=0;
     Handler mHandler;
     Runnable runnable;
-    AnimatedTitle animatedTitle;
     MediaPlaybackService myService;
     boolean bound=false;
     Notification status;
