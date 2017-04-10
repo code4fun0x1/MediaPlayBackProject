@@ -138,6 +138,7 @@ public class LibraryFragment extends Fragment {
                 Picasso.with(getContext()).load(new File(s.getArtPath())).fit().into(holder.artView);
             }catch(Exception e){
                 Log.d(TAG, "onBindViewHolder: "+e.toString());
+                Picasso.with(getContext()).load(R.drawable.photo).fit().into(holder.artView);
             }
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override

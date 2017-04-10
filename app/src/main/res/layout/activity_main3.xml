@@ -81,6 +81,7 @@
                             android:layout_width="80dp"
                             android:layout_height="match_parent"
                             android:layout_margin="4dp"
+                            android:id="@+id/player_thumbnail"
                             android:src="@drawable/splash" />
 
                         <FrameLayout
@@ -98,11 +99,13 @@
                                     android:layout_width="fill_parent"
                                     android:textSize="18sp"
                                     android:maxLines="1"
+                                    android:id="@+id/song_name"
                                     android:layout_height="wrap_content"
                                     android:text="Papercut" />
 
                                 <TextView
                                     android:maxLines="1"
+                                    android:id="@+id/artist"
                                     android:layout_width="fill_parent"
                                     android:textColor="@color/colorPrimaryDark"
                                     android:layout_height="wrap_content"

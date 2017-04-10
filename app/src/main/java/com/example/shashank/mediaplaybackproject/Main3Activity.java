@@ -21,9 +21,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.shashank.mediaplaybackproject.model.Song;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,6 +40,8 @@ public class Main3Activity extends AppCompatActivity {
     ArrayList<Song> listSong=null;
     RecyclerView rv;
     public static final String TAG="SONG";
+    ImageView playerThumbnail;
+    TextView artist,song_name;
     ImageButton stop;
     ImageButton next,prev;
     MediaPlayer player;
@@ -89,6 +94,10 @@ public class Main3Activity extends AppCompatActivity {
         next=(ImageButton)findViewById(R.id.next);
         prev=(ImageButton)findViewById(R.id.prev);
         seekbar=(SeekBar)findViewById(R.id.seekBar);
+        playerThumbnail=(ImageView)findViewById(R.id.player_thumbnail);
+        artist=(TextView)findViewById(R.id.artist);
+        song_name=(TextView)findViewById(R.id.song_name);
+
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -175,17 +184,21 @@ public class Main3Activity extends AppCompatActivity {
                     player.pause();
                     playing=false;
                     stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
-                } else if (current!=-1){
-
-                    // Toast.makeText(MainActivity.this,"YO",Toast.LENGTH_LONG).show();
-                    player.start();
-                    playing=true;
-                    playCycle();
-                    // playSong(listSong.get(current).getDATA(),current,seektime);
-                    stop.setImageResource(R.drawable.ic_pause_black_48dp);
-                }else if (listSong.size()!=0){
-                    playSong(listSong.get(0).getDATA(),0,0);
-                    stop.setImageResource(R.drawable.ic_pause_black_48dp);
+                } else if (listSong.size()!=0){
+                    if (current!=-1){
+                        // Toast.makeText(MainActivity.this,"YO",Toast.LENGTH_LONG).show();
+                        player.start();
+                        playing=true;
+                        playCycle();
+                        updatePlayerDetails(current);
+                        // playSong(listSong.get(current).getDATA(),current,seektime);
+                        stop.setImageResource(R.drawable.ic_pause_black_48dp);
+                    }else {
+                        current=0;
+                        updatePlayerDetails(current);
+                        playSong(listSong.get(0).getDATA(),0,0);
+                        stop.setImageResource(R.drawable.ic_pause_black_48dp);
+                    }
                 }
             }
         });
@@ -206,8 +219,11 @@ public class Main3Activity extends AppCompatActivity {
 
                 }else  if(current!=-1){
                     current++;
+                    updatePlayerDetails(current);
                     playSong(listSong.get(current).getDATA(),current,0);
                 } else{
+                    updatePlayerDetails(0);
+
                     playSong(listSong.get(0).getDATA(),0,0);
 
                 }
@@ -230,7 +246,7 @@ public class Main3Activity extends AppCompatActivity {
                         stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
                         seekbar.setProgress(0);
                     }
-
+                    updatePlayerDetails(current);
                     playSong(listSong.get(current).getDATA(),current,0);
                 }
             }
@@ -305,6 +321,7 @@ public class Main3Activity extends AppCompatActivity {
                         seektime=0;
                         current=pos;
                         playSong(listSong.get(current).getDATA(),current,0);
+                        updatePlayerDetails(current);
                     }
                 });
                 return libraryFragment;
@@ -409,6 +426,18 @@ public class Main3Activity extends AppCompatActivity {
         });
 
 
+    }
+
+    void updatePlayerDetails(int pos){
+        Song song=listSong.get(pos);
+        artist.setText(song.getARTIST());
+        song_name.setText(song.getTITLE());
+        try {
+            Picasso.with(getApplicationContext()).load(new File(song.getArtPath())).fit().into(playerThumbnail);
+        }catch(Exception e){
+            Log.d(TAG, "onBindViewHolder: "+e.toString());
+            Picasso.with(getApplicationContext()).load(R.drawable.splash).fit().centerInside().into(playerThumbnail);
+        }
     }
 
 
