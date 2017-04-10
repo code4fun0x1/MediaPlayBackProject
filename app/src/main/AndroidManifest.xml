@@ -36,8 +36,8 @@
 
         <activity
             android:name=".Main3Activity"
-            android:label="@string/title_activity_main3"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:icon="@drawable/splash"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
