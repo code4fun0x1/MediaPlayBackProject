@@ -29,6 +29,8 @@ import com.example.shashank.mediaplaybackproject.model.Song;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class Main3Activity extends AppCompatActivity {
@@ -57,7 +59,7 @@ public class Main3Activity extends AppCompatActivity {
     AsyncTask<Void,Void,ArrayList<Song>> songFetch=null;
     LibraryFragment libraryFragment=null;
     AlbumInfoFragment albumInfoFragment;
-    SuggestFragment suggestFragment=null;
+    TopTrackFragment topTrackFragment =null;
 
 
     @Override
@@ -76,6 +78,7 @@ public class Main3Activity extends AppCompatActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
+
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -151,7 +154,6 @@ public class Main3Activity extends AppCompatActivity {
                     String songid=cursor.getString(id);
                     String songfilepath=cursor.getString(data);
                     s.add(new Song(songfilepath,albumname,null,songid,songartist,title,null));
-
                 }
                 while(albumCursor.moveToNext()){
                     String albumartpath=albumCursor.getString(art);
@@ -169,9 +171,6 @@ public class Main3Activity extends AppCompatActivity {
                 super.onPostExecute(songs);
                 listSong=new ArrayList<>();
                 listSong=songs;
-
-
-
 
             }
         };
@@ -219,6 +218,18 @@ public class Main3Activity extends AppCompatActivity {
 
                 }else  if(current!=-1){
                     current++;
+
+                    if(albumInfoFragment!=null){
+                        try {
+                            albumInfoFragment.getSong(listSong.get(current));
+
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     updatePlayerDetails(current);
                     playSong(listSong.get(current).getDATA(),current,0);
                 } else{
@@ -240,6 +251,15 @@ public class Main3Activity extends AppCompatActivity {
 
                 }else {
                     current--;
+                    if(albumInfoFragment!=null){
+                        try {
+                            albumInfoFragment.getSong(listSong.get(current));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     if(playing){
                         player.stop();
                         playing=false;
@@ -320,6 +340,16 @@ public class Main3Activity extends AppCompatActivity {
                     public void onSongClick(int pos) {
                         seektime=0;
                         current=pos;
+                        if(albumInfoFragment!=null ){
+                            try {
+                                albumInfoFragment.getSong(listSong.get(current));
+
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         playSong(listSong.get(current).getDATA(),current,0);
                         updatePlayerDetails(current);
                     }
@@ -328,17 +358,31 @@ public class Main3Activity extends AppCompatActivity {
             }
             if(position==1){
                 if(albumInfoFragment==null)
-                    return AlbumInfoFragment.newInstance();
-                else{
-                    return albumInfoFragment;
+                    albumInfoFragment = AlbumInfoFragment.newInstance();
+                try {
+                    if(current!=-1){
+                        albumInfoFragment.getSong(listSong.get(current));
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 }
+                return albumInfoFragment;
             }
             if(position==2){
-                if(suggestFragment==null)
-                    return SuggestFragment.newInstance();
-                else{
-                    return suggestFragment;
+                if(topTrackFragment ==null) {
+                    topTrackFragment = TopTrackFragment.newInstance();
+                    topTrackFragment.setOnFragmentReady(new TopTrackFragment.OnFragmentReady() {
+                        @Override
+                        public void onReady() {
+                            if(current!=-1)
+                                topTrackFragment.getArtist(listSong.get(current).getARTIST());
+                        }
+                    });
                 }
+
+                return topTrackFragment;
             }
             return null;
         }
@@ -357,14 +401,14 @@ public class Main3Activity extends AppCompatActivity {
                 case 1:
                     return "ALBUM INFO";
                 case 2:
-                    return "SUGGESTION";
+                    return "TOP";
             }
             return null;
         }
     }
 
     void playCycle(){
-        Log.d(TAG, "playCycle: "+player.getCurrentPosition());
+     //   Log.d(TAG, "playCycle: "+player.getCurrentPosition());
 
         seekbar.setProgress(player.getCurrentPosition());
         if(playing){
@@ -409,12 +453,17 @@ public class Main3Activity extends AppCompatActivity {
 
             player.start();
             current=p;
+
+
+
             stop.setImageResource(R.drawable.ic_pause_black_48dp);
         }catch (IllegalStateException e){
             player.seekTo(seek);
 
             player.start();
             current=p;
+
+
             stop.setImageResource(R.drawable.ic_pause_black_48dp);
         }
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

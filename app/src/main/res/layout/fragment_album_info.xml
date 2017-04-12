@@ -1,13 +1,86 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="86dp"
     tools:context="com.example.shashank.mediaplaybackproject.AlbumInfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardElevation="@dimen/cardview_default_elevation"
+        android:background="@color/colorAccent"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:cardCornerRadius="@dimen/cardview_default_elevation"
+        app:cardUseCompatPadding="true"
+        android:layout_marginRight="8dp"
+        android:id="@+id/holder"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_gravity="end"
+                android:layout_width="170dp"
+                app:layout_anchor="@id/holder"
+                android:elevation="3dp"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:paddingTop="4dp"
+                    android:paddingRight="6dp"
+                    android:paddingLeft="6dp"
+                    android:text=""
+                    android:id="@+id/album_name"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:paddingRight="6dp"
+                    android:paddingLeft="6dp"
+                    android:id="@+id/artist_name"
+                    android:layout_width="match_parent"
+                    android:paddingTop="4dp"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </FrameLayout>
+<android.support.v7.widget.RecyclerView
+    android:layout_marginTop="26dp"
+    android:id="@+id/body"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="80dp"
+    android:background="@color/cardview_light_background"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
+
+</android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <ImageView
+        android:padding="2dp"
+        android:layout_width="150dp"
+        android:src="@drawable/splash"
+        app:layout_anchor="@id/holder"
+        android:elevation="3dp"
+        android:id="@+id/cover"
+        android:layout_marginLeft="26dp"
+        android:layout_height="150dp" />
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>
