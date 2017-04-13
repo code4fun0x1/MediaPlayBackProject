@@ -29,9 +29,7 @@ import java.util.ArrayList;
 import static com.example.shashank.mediaplaybackproject.Main3Activity.TAG;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class TopTrackFragment extends Fragment {
 
     public boolean isVisible=false;
