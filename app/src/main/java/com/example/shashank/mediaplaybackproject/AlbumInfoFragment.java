@@ -153,7 +153,7 @@ public class AlbumInfoFragment extends Fragment {
 
 
             try {
-                u = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=bcf006ec84c572c33264e09c026d3f11&artist="
+                u = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=84c572c33264e09c026d3f11&artist="
                         +URLEncoder.encode( song.getARTIST().trim(), "UTF-8")
                         + "&album=" + URLEncoder.encode( song.getALBUM().trim(), "UTF-8")+ "&format=json";
                 Log.d(TAG, "u = "+ u);

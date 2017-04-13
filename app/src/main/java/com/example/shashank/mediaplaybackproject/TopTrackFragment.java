@@ -126,7 +126,7 @@ public class TopTrackFragment extends Fragment {
             try {
                 u = "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist="+
                         URLEncoder.encode( artist, "UTF-8")
-                        +"&api_key=bcf006ec84c572c33264e09c026d3f11&format=json";
+                        +"&api_key=b84c572c33264e09c026d3f11&format=json";
                 Log.d(TAG, "u = "+ u);
 
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
