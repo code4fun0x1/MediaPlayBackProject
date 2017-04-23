@@ -1,4 +1,4 @@
-package com.example.shashank.mediaplaybackproject.model;
+package com.canthinkcando.shashank.mediaplaybackproject.model;
 
 import java.util.ArrayList;
 

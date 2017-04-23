@@ -1,4 +1,4 @@
-package com.example.shashank.mediaplaybackproject;
+package com.canthinkcando.shashank.mediaplaybackproject;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

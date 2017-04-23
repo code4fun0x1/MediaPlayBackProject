@@ -1,4 +1,4 @@
-package com.example.shashank.mediaplaybackproject;
+package com.canthinkcando.shashank.mediaplaybackproject;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -23,7 +22,7 @@ import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.shashank.mediaplaybackproject.model.Song;
+import com.canthinkcando.shashank.mediaplaybackproject.model.Song;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -219,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void playCycle(){
-        Log.d(TAG, "playCycle: "+player.getCurrentPosition());
+     //   Log.d(TAG, "playCycle: "+player.getCurrentPosition());
 
         seekbar.setProgress(player.getCurrentPosition());
         if(playing){
@@ -321,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Picasso.with(MainActivity.this).load(new File(s.getArtPath())).fit().into(holder.artView);
                 }catch(Exception e){
-                    Log.d(TAG, "onBindViewHolder: "+e.toString());
+                 //  Log.d(TAG, "onBindViewHolder: "+e.toString());
                 }
                 holder.v.setOnClickListener(new View.OnClickListener() {
                     @Override

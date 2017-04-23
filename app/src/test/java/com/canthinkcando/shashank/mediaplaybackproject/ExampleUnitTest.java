@@ -1,4 +1,4 @@
-package com.example.shashank.mediaplaybackproject;
+package com.canthinkcando.shashank.mediaplaybackproject;
 
 import org.junit.Test;
 

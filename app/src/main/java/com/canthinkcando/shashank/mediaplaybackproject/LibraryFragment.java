@@ -1,25 +1,21 @@
-package com.example.shashank.mediaplaybackproject;
+package com.canthinkcando.shashank.mediaplaybackproject;
 
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.shashank.mediaplaybackproject.model.Song;
+import com.canthinkcando.shashank.mediaplaybackproject.model.Song;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import static com.example.shashank.mediaplaybackproject.Main3Activity.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,7 +73,7 @@ public class LibraryFragment extends Fragment {
         if (getArguments() != null) {
 
         }
-        Toast.makeText(getContext(), ""+listSong.size(), Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(getContext(), ""+listSong.size(), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -137,7 +133,7 @@ public class LibraryFragment extends Fragment {
             try {
                 Picasso.with(getContext()).load(new File(s.getArtPath())).fit().into(holder.artView);
             }catch(Exception e){
-                Log.d(TAG, "onBindViewHolder: "+e.toString());
+             //   Log.d(TAG, "onBindViewHolder: "+e.toString());
                 Picasso.with(getContext()).load(R.drawable.photo).fit().into(holder.artView);
             }
             holder.v.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +156,7 @@ public class LibraryFragment extends Fragment {
 
     void sendSongs(ArrayList<Song> temp){
         listSong=temp;
+        if(listSong!=null)
         adapter.notifyDataSetChanged();
     }
 

@@ -25,7 +25,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:text="Numb"
-                android:padding="6dp"
+                android:paddingTop="6dp"
+                android:paddingLeft="6dp"
+                android:paddingBottom="2dp"
                 android:overScrollMode="never"
                 android:maxLines="1"
                 android:lines="1"

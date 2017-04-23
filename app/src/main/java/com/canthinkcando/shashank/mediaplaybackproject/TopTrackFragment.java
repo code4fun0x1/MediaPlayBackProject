@@ -1,4 +1,4 @@
-package com.example.shashank.mediaplaybackproject;
+package com.canthinkcando.shashank.mediaplaybackproject;
 
 
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.shashank.mediaplaybackproject.model.TopSong;
+import com.canthinkcando.shashank.mediaplaybackproject.model.TopSong;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import static com.example.shashank.mediaplaybackproject.Main3Activity.TAG;
+import static com.canthinkcando.shashank.mediaplaybackproject.Main3Activity.TAG;
 
 
 
@@ -126,15 +126,15 @@ public class TopTrackFragment extends Fragment {
             try {
                 u = "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist="+
                         URLEncoder.encode( artist, "UTF-8")
-                        +"&api_key=b84c572c33264e09c026d3f11&format=json";
-                Log.d(TAG, "u = "+ u);
+                        +"&api_key=bcf006ec84c572c33264e09c026d3f11&format=json";
+            //   Log.d(TAG, "u = "+ u);
 
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, u, null, new Response.Listener<JSONObject>() {
 
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.d(TAG, "onResponse: "+response.toString());
+                              //  Log.d(TAG, "onResponse: "+response.toString());
                                 try {
                                     JSONArray tracks = response.getJSONObject("toptracks").getJSONArray("track");
                                     for(int i=0;i<(tracks.length()>20?20:tracks.length());i++){
@@ -156,13 +156,13 @@ public class TopTrackFragment extends Fragment {
                                         }
                                         topSongs.add(song);
                                     }
-                                    Log.d(TAG, "ARRAYLIST"+topSongs.size());
+                             //       Log.d(TAG, "ARRAYLIST"+topSongs.size());
                                     adapter.notifyDataSetChanged();
 
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Log.d(TAG, "ERROR ARRAYLIST"+topSongs.size());
+                            //        Log.d(TAG, "ERROR ARRAYLIST"+topSongs.size());
                                     adapter.notifyDataSetChanged();
                                 }
 
@@ -222,7 +222,7 @@ public class TopTrackFragment extends Fragment {
             try {
                 Picasso.with(getActivity().getApplicationContext()).load(topSongs.get(position).getCover()).fit().into(holder.background);
             }catch(Exception e){
-                Log.d(TAG, "onBindViewHolder: "+e.toString());
+            //    Log.d(TAG, "onBindViewHolder: "+e.toString());
                 Picasso.with(getActivity().getApplicationContext()).load(R.drawable.photo).fit().into(holder.background);
             }
 

@@ -1,11 +1,10 @@
-package com.example.shashank.mediaplaybackproject;
+package com.canthinkcando.shashank.mediaplaybackproject;
 
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.shashank.mediaplaybackproject.model.FetchSong;
-import com.example.shashank.mediaplaybackproject.model.IndividualFetchSong;
-import com.example.shashank.mediaplaybackproject.model.Song;
+import com.canthinkcando.shashank.mediaplaybackproject.model.FetchSong;
+import com.canthinkcando.shashank.mediaplaybackproject.model.IndividualFetchSong;
+import com.canthinkcando.shashank.mediaplaybackproject.model.Song;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -30,8 +29,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import static com.example.shashank.mediaplaybackproject.MainActivity.TAG;
 
 
 /**
@@ -115,7 +112,9 @@ public class AlbumInfoFragment extends Fragment {
         public void onBindViewHolder(final SongHolder holder, final int position) {
             holder.title.setText(fetchSong.getSongs().get(position).getSongName());
 
-            holder.duration.setText(fetchSong.getSongs().get(position).getDuration());
+            int min=Integer.parseInt(fetchSong.getSongs().get(position).getDuration())/60;
+            int sec=Integer.parseInt(fetchSong.getSongs().get(position).getDuration())%60;
+            holder.duration.setText(min+" Min "+sec+" Sec");
 
 
 
@@ -147,16 +146,16 @@ public class AlbumInfoFragment extends Fragment {
         if (song != null) {
 
             fetchSong = new FetchSong();
-            Log.d(TAG, "Artist "+song.getARTIST() + "&album=" + song.getALBUM());
+       //     Log.d(TAG, "Artist "+song.getARTIST() + "&album=" + song.getALBUM());
 
             String u=null;
 
 
             try {
-                u = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=84c572c33264e09c026d3f11&artist="
+                u = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=bcf006ec84c572c33264e09c026d3f11&artist="
                         +URLEncoder.encode( song.getARTIST().trim(), "UTF-8")
                         + "&album=" + URLEncoder.encode( song.getALBUM().trim(), "UTF-8")+ "&format=json";
-                Log.d(TAG, "u = "+ u);
+        //        Log.d(TAG, "u = "+ u);
 
             } catch (Exception e) {
 

@@ -1,4 +1,4 @@
-package com.example.shashank.mediaplaybackproject;
+package com.canthinkcando.shashank.mediaplaybackproject;
 
 /**
  * Created by Shashank on 27-10-2016.

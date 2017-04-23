@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shashank.mediaplaybackproject">
+    package="com.canthinkcando.shashank.mediaplaybackproject">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -16,10 +16,14 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
+
             android:icon="@drawable/splash"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Main2Activity"
+            android:screenOrientation="portrait"
+
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -36,6 +40,7 @@
 
         <activity
             android:name=".Main3Activity"
+            android:screenOrientation="portrait"
             android:icon="@drawable/splash"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
