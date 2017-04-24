@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         seektime=0;
                         playSong(s.getDATA(),p,0);
-                        RemoteViews notificationView=new RemoteViews(getPackageName(),R.layout.notification);
+                        RemoteViews notificationView=new RemoteViews(getPackageName(),R.layout.notification_expanded);
                    //     notificationView.setImageViewBitmap(R.id.album_art, BitmapFactory.decodeFile(coverArt));
                         }
                 });

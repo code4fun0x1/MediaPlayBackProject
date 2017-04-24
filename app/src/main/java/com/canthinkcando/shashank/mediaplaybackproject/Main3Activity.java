@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -70,7 +71,7 @@ public class Main3Activity extends AppCompatActivity {
     LibraryFragment libraryFragment=null;
     AlbumInfoFragment albumInfoFragment;
     TopTrackFragment topTrackFragment =null;
-    RemoteViews remoteView;
+    RemoteViews remoteView,compactView;
     NotificationCompat.Builder notification;
     NotificationManager nManager;
 
@@ -96,48 +97,6 @@ public class Main3Activity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-
-
-        remoteView =new RemoteViews(getPackageName(),R.layout.notification);
-        remoteView.setImageViewResource(R.id.album_art,R.drawable.photo);
-        //play_pause
-        Intent playpauseIntent=new Intent();
-        playpauseIntent.setAction(CustomIntentAction.ACTION_PLAY);
-        PendingIntent piPlayPause=PendingIntent.getBroadcast(this,0,playpauseIntent,0);
-        remoteView.setOnClickPendingIntent(R.id.play_pause, piPlayPause);
-        Intent nextIntent=new Intent();
-        nextIntent.setAction(CustomIntentAction.ACTION_NEXT);
-        PendingIntent piNext=PendingIntent.getBroadcast(this,0,nextIntent,0);
-
-        remoteView.setOnClickPendingIntent(R.id.next,
-               piNext
-        );
-        Intent prevIntent=new Intent();
-        prevIntent.setAction(CustomIntentAction.ACTION_PREV);
-
-        PendingIntent piPrev=PendingIntent.getBroadcast(this,0,prevIntent,0);
-
-        remoteView.setOnClickPendingIntent(R.id.prev,
-               piPrev
-        );
-
-
-        nManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        //actual notificationd
-        Intent i=new Intent(this,Main3Activity.class);
-        PendingIntent notificationPIntent=PendingIntent.getActivity(this,100,i,PendingIntent.FLAG_UPDATE_CURRENT);
-        notification= new NotificationCompat.Builder(this);
-        notification.setCustomBigContentView(remoteView);
-        notification.setSmallIcon(R.drawable.splash);
-      //  notification.setAutoCancel(true);
-       // notification.setContentIntent(notificationPIntent);
-        nManager.notify(0,notification.build());
-
-
-
-
 
 
 
@@ -280,6 +239,48 @@ public class Main3Activity extends AppCompatActivity {
 
     }
 
+
+    void showNotification(){
+        compactView=new RemoteViews(getPackageName(),R.layout.notification_small);
+        remoteView =new RemoteViews(getPackageName(),R.layout.notification_expanded);
+        //remoteView.setImageViewResource(R.id.album_art,R.drawable.photo);
+        compactView.setImageViewResource(R.id.album_art,R.drawable.splash);
+
+        //play_pause
+        Intent playpauseIntent=new Intent();
+        playpauseIntent.setAction(CustomIntentAction.ACTION_PLAY);
+        PendingIntent piPlayPause=PendingIntent.getBroadcast(this,0,playpauseIntent,0);
+        remoteView.setOnClickPendingIntent(R.id.play_pause, piPlayPause);
+        compactView.setOnClickPendingIntent(R.id.play_pause,piPlayPause);
+        //next intent
+        Intent nextIntent=new Intent();
+        nextIntent.setAction(CustomIntentAction.ACTION_NEXT);
+        PendingIntent piNext=PendingIntent.getBroadcast(this,0,nextIntent,0);
+        remoteView.setOnClickPendingIntent(R.id.next, piNext);
+        compactView.setOnClickPendingIntent(R.id.next,piNext);
+        //prev intent
+        Intent prevIntent=new Intent();
+        prevIntent.setAction(CustomIntentAction.ACTION_PREV);
+        PendingIntent piPrev=PendingIntent.getBroadcast(this,0,prevIntent,0);
+        remoteView.setOnClickPendingIntent(R.id.prev, piPrev);
+        compactView.setOnClickPendingIntent(R.id.prev,piPrev);
+
+
+
+        nManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        //actual notificationd
+        Intent i=new Intent(this,Main3Activity.class);
+        PendingIntent notificationPIntent=PendingIntent.getActivity(this,100,i,PendingIntent.FLAG_UPDATE_CURRENT);
+        notification= new NotificationCompat.Builder(this);
+        notification.setContent(compactView);
+        notification.setAutoCancel(true);
+        notification.setCustomBigContentView(remoteView);
+        notification.setSmallIcon(R.drawable.splash);
+        nManager.notify(0,notification.build());
+    }
+
+
     private void prevClick(View v) {
 
         seektime=0;
@@ -353,6 +354,8 @@ public class Main3Activity extends AppCompatActivity {
             playing=false;
             stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
             remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+            compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+
             nManager.notify(0,notification.build());
 
         } else if (listSong.size()!=0){
@@ -364,6 +367,7 @@ public class Main3Activity extends AppCompatActivity {
                 updatePlayerDetails(current);
                 // playSong(listSong.get(current).getDATA(),current,seektime);
                 stop.setImageResource(R.drawable.ic_pause_black_48dp);
+                compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
                 remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
                 nManager.notify(0,notification.build());
 
@@ -373,9 +377,12 @@ public class Main3Activity extends AppCompatActivity {
                 playSong(listSong.get(0).getDATA(),0,0);
                 stop.setImageResource(R.drawable.ic_pause_black_48dp);
                 remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
+                compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
                 nManager.notify(0,notification.build());
 
             }
+        }else {
+            nManager.cancelAll();
         }
     }
 
@@ -522,7 +529,9 @@ public class Main3Activity extends AppCompatActivity {
 
 
     void playSong(String data,int p,int seek){
-
+        if(!isNotificationVisible()){
+            showNotification();
+        }
         //   Toast.makeText(getApplicationContext(),s.getDATA().toString(),Toast.LENGTH_LONG).show();
         try {
             if(playing)
@@ -554,6 +563,9 @@ public class Main3Activity extends AppCompatActivity {
 
 
             stop.setImageResource(R.drawable.ic_pause_black_48dp);
+            remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
+            compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
+            nManager.notify(0,notification.build());
         }catch (IllegalStateException e){
             player.seekTo(seek);
 
@@ -562,11 +574,18 @@ public class Main3Activity extends AppCompatActivity {
 
 
             stop.setImageResource(R.drawable.ic_pause_black_48dp);
+
+            remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
+            compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
+            nManager.notify(0,notification.build());
         }
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
+                remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+                compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+                nManager.notify(0,notification.build());
                 seektime=seekbar.getMax();
             }
         });
@@ -574,7 +593,18 @@ public class Main3Activity extends AppCompatActivity {
 
     }
 
+    private boolean isNotificationVisible() {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent test = PendingIntent.getActivity(Main3Activity.this, 100, notificationIntent, PendingIntent.FLAG_NO_CREATE);
+        return test != null;
+    }
+
     void updatePlayerDetails(int pos){
+
+        if(!isNotificationVisible()){
+            showNotification();
+        }
+
         Song song=listSong.get(pos);
         artist.setText(song.getARTIST());
         song_name.setText(song.getTITLE());
@@ -584,6 +614,18 @@ public class Main3Activity extends AppCompatActivity {
           //  Log.d(TAG, "onBindViewHolder: "+e.toString());
             Picasso.with(getApplicationContext()).load(R.drawable.splash).fit().centerInside().into(playerThumbnail);
         }
+        remoteView.setTextViewText(R.id.song_title,song.getTITLE());
+        remoteView.setTextViewText(R.id.song_artist,song.getARTIST());
+        compactView.setTextViewText(R.id.song_title,song.getTITLE());
+        compactView.setTextViewText(R.id.song_artist,song.getARTIST());
+        try {
+            remoteView.setImageViewBitmap(R.id.album_art, BitmapFactory.decodeFile(String.valueOf(new File(song.getArtPath()))));
+        }catch(Exception e){
+            //   Log.d(TAG, "onBindViewHolder: "+e.toString());
+            remoteView.setImageViewResource(R.id.album_art,R.drawable.splash);
+        }
+        nManager.notify(0,notification.build());
+
     }
 
 
@@ -600,17 +642,18 @@ public class Main3Activity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        unregisterReceiver(playReceiver);
-        unregisterReceiver(prevReceiver);
-        unregisterReceiver(nexReceiver);
-
+      //  unregisterReceiver(playReceiver);
+       // unregisterReceiver(prevReceiver);
+        //unregisterReceiver(nexReceiver);
         super.onStop();
     }
 
-
-
-
-
-
-
+    @Override
+    protected void onDestroy() {
+          unregisterReceiver(playReceiver);
+         unregisterReceiver(prevReceiver);
+        unregisterReceiver(nexReceiver);
+        nManager.cancelAll();
+        super.onDestroy();
+    }
 }

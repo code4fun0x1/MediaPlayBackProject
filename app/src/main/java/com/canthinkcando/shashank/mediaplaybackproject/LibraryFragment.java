@@ -140,7 +140,7 @@ public class LibraryFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                         songClickListener.onSongClick(position);
-//                    RemoteViews notificationView=new RemoteViews(getPackageName(),R.layout.notification);
+//                    RemoteViews notificationView=new RemoteViews(getPackageName(),R.layout.notification_expanded);
                     //     notificationView.setImageViewBitmap(R.id.album_art, BitmapFactory.decodeFile(coverArt));
                 }
             });
