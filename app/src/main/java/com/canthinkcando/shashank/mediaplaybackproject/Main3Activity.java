@@ -303,6 +303,10 @@ public class Main3Activity extends AppCompatActivity {
                 player.stop();
                 playing=false;
                 stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
+                remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+                compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+
+                nManager.notify(0,notification.build());
                 seekbar.setProgress(0);
             }
             updatePlayerDetails(current);
@@ -311,20 +315,32 @@ public class Main3Activity extends AppCompatActivity {
     }
 
     private void nextClick(View v) {
+
         seektime=0;
 
         if(playing){
+            if(!isNotificationVisible()){
+                showNotification();
+            }
             player.stop();
             playing=false;
             stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
+            remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+            compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+            nManager.notify(0,notification.build());
             seekbar.setProgress(0);
         }
         if (current==listSong.size()-1){
-            //
-
+            if(!isNotificationVisible()){
+                showNotification();
+            }
+            //just repeat the last song
+            playSong(listSong.get(current).getDATA(),current,0);
         }else  if(current!=-1){
+            if(!isNotificationVisible()){
+                showNotification();
+            }
             current++;
-
             if(albumInfoFragment!=null){
                 try {
                     albumInfoFragment.getSong(listSong.get(current));
@@ -339,6 +355,9 @@ public class Main3Activity extends AppCompatActivity {
             updatePlayerDetails(current);
             playSong(listSong.get(current).getDATA(),current,0);
         } else{
+            if(!isNotificationVisible()){
+                showNotification();
+            }
             updatePlayerDetails(0);
 
             playSong(listSong.get(0).getDATA(),0,0);
@@ -650,10 +669,12 @@ public class Main3Activity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-          unregisterReceiver(playReceiver);
-         unregisterReceiver(prevReceiver);
-        unregisterReceiver(nexReceiver);
         nManager.cancelAll();
+        unregisterReceiver(playReceiver);
+        unregisterReceiver(prevReceiver);
+        unregisterReceiver(nexReceiver);
         super.onDestroy();
     }
+
+
 }
