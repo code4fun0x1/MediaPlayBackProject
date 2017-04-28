@@ -16,15 +16,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
-
             android:icon="@drawable/splash"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Main2Activity"
-            android:screenOrientation="portrait"
-
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,16 +31,16 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".MediaPlaybackService"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity
             android:name=".Main3Activity"
-            android:screenOrientation="portrait"
             android:icon="@drawable/splash"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".services.PlaybackService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>

@@ -4,17 +4,19 @@ package com.canthinkcando.shashank.mediaplaybackproject;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -36,6 +38,7 @@ import android.widget.TextView;
 
 import com.canthinkcando.shashank.mediaplaybackproject.intents.CustomIntentAction;
 import com.canthinkcando.shashank.mediaplaybackproject.model.Song;
+import com.canthinkcando.shashank.mediaplaybackproject.services.PlaybackService;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -43,7 +46,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
-public class Main3Activity extends AppCompatActivity {
+public class Main3Activity extends AppCompatActivity implements PlaybackService.PlaybackListeners{
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -64,7 +67,6 @@ public class Main3Activity extends AppCompatActivity {
     int seektime=0;
     Handler mHandler;
     Runnable runnable;
-    MediaPlaybackService myService;
     boolean bound=false;
     private ViewPager mViewPager;
     AsyncTask<Void,Void,ArrayList<Song>> songFetch=null;
@@ -74,6 +76,8 @@ public class Main3Activity extends AppCompatActivity {
     RemoteViews remoteView,compactView;
     NotificationCompat.Builder notification;
     NotificationManager nManager;
+    PlaybackService mService;
+    boolean mBound = false;
 
 
     @Override
@@ -310,7 +314,7 @@ public class Main3Activity extends AppCompatActivity {
                 seekbar.setProgress(0);
             }
             updatePlayerDetails(current);
-            playSong(listSong.get(current).getDATA(),current,0);
+            mService.playSong(listSong.get(current).getDATA(),current,0);
         }
     }
 
@@ -335,7 +339,7 @@ public class Main3Activity extends AppCompatActivity {
                 showNotification();
             }
             //just repeat the last song
-            playSong(listSong.get(current).getDATA(),current,0);
+            mService.playSong(listSong.get(current).getDATA(),current,0);
         }else  if(current!=-1){
             if(!isNotificationVisible()){
                 showNotification();
@@ -353,28 +357,28 @@ public class Main3Activity extends AppCompatActivity {
             }
 
             updatePlayerDetails(current);
-            playSong(listSong.get(current).getDATA(),current,0);
+            mService.playSong(listSong.get(current).getDATA(),current,0);
         } else{
             if(!isNotificationVisible()){
                 showNotification();
             }
             updatePlayerDetails(0);
 
-            playSong(listSong.get(0).getDATA(),0,0);
+            mService.playSong(listSong.get(0).getDATA(),0,0);
 
         }
     }
 
     private void playPauseClick(View v) {
         if (playing){
-
             seektime=player.getCurrentPosition();
             player.pause();
             playing=false;
             stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
             remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
             compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
-
+            mService.setBooleanPausePlaySong(false);
+            mService.pausePlayingSong();
             nManager.notify(0,notification.build());
 
         } else if (listSong.size()!=0){
@@ -382,6 +386,8 @@ public class Main3Activity extends AppCompatActivity {
                 // Toast.makeText(MainActivity.this,"YO",Toast.LENGTH_LONG).show();
                 player.start();
                 playing=true;
+                mService.playPausedSong();
+                mService.setBooleanPausePlaySong(true);
                 playCycle();
                 updatePlayerDetails(current);
                 // playSong(listSong.get(current).getDATA(),current,seektime);
@@ -393,7 +399,7 @@ public class Main3Activity extends AppCompatActivity {
             }else {
                 current=0;
                 updatePlayerDetails(current);
-                playSong(listSong.get(0).getDATA(),0,0);
+                mService.playSong(listSong.get(0).getDATA(),0,0);
                 stop.setImageResource(R.drawable.ic_pause_black_48dp);
                 remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
                 compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
@@ -428,7 +434,37 @@ public class Main3Activity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPlayerPrepared(MediaPlayer mp) {
+        player=mp;
+        seekbar.setMax(mp.getDuration());
+        seekbar.setProgress(0);
+        playing=true;
+        stop.setImageResource(R.drawable.ic_pause_black_48dp);
+        remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
+        compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
+        nManager.notify(0,notification.build());
+        playCycle();
+    }
 
+    @Override
+    public void onSongCompleted(MediaPlayer mp) {
+        stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
+        remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+        compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
+        nManager.notify(0,notification.build());
+        seektime = seekbar.getMax();
+    }
+
+    @Override
+    public void onSeekProgress(int seek) {
+        seekbar.setProgress(seek);
+    }
+
+    @Override
+    public void notifyCurrent(int p) {
+        current=p;
+    }
 
 
     /**
@@ -473,7 +509,7 @@ public class Main3Activity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                        playSong(listSong.get(current).getDATA(),current,0);
+                        mService.playSong(listSong.get(current).getDATA(),current,0);
                         updatePlayerDetails(current);
                     }
                 });
@@ -530,6 +566,8 @@ public class Main3Activity extends AppCompatActivity {
         }
     }
 
+
+
     void playCycle(){
      //   Log.d(TAG, "playCycle: "+player.getCurrentPosition());
 
@@ -547,70 +585,6 @@ public class Main3Activity extends AppCompatActivity {
     }
 
 
-    void playSong(String data,int p,int seek){
-        if(!isNotificationVisible()){
-            showNotification();
-        }
-        //   Toast.makeText(getApplicationContext(),s.getDATA().toString(),Toast.LENGTH_LONG).show();
-        try {
-            if(playing)
-                player.release();
-
-            player = MediaPlayer.create(Main3Activity.this, Uri.fromFile(new File(data)));
-
-            playing=true;
-            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    seekbar.setMax(mp.getDuration());
-                    seekbar.setProgress(0);
-                    playCycle();
-                }
-            });
-            player.prepareAsync();
-            player.seekTo(seek);
-            if(player.getDuration()!=-1){
-                seekbar.setProgress(seek);
-            }else {
-                seekbar.setProgress(0);
-
-            }
-
-            player.start();
-            current=p;
-
-
-
-            stop.setImageResource(R.drawable.ic_pause_black_48dp);
-            remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
-            compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
-            nManager.notify(0,notification.build());
-        }catch (IllegalStateException e){
-            player.seekTo(seek);
-
-            player.start();
-            current=p;
-
-
-            stop.setImageResource(R.drawable.ic_pause_black_48dp);
-
-            remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
-            compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_pause_black_48dp);
-            nManager.notify(0,notification.build());
-        }
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                stop.setImageResource(R.drawable.ic_play_arrow_black_48dp);
-                remoteView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
-                compactView.setImageViewResource(R.id.play_pause,R.drawable.ic_play_arrow_black_48dp);
-                nManager.notify(0,notification.build());
-                seektime=seekbar.getMax();
-            }
-        });
-
-
-    }
 
     private boolean isNotificationVisible() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -647,11 +621,31 @@ public class Main3Activity extends AppCompatActivity {
 
     }
 
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            PlaybackService.PlaybackBinder binder = (PlaybackService.PlaybackBinder) service;
+            mService = binder.getService();
+            mService.setOnPlaybackListeners(Main3Activity.this);
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
 
     @Override
     protected void onStart() {
         super.onStart();
+        Intent intent = new Intent(this, PlaybackService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         registerReceiver(playReceiver,new IntentFilter(CustomIntentAction.ACTION_PLAY));
         registerReceiver(nexReceiver,new IntentFilter(CustomIntentAction.ACTION_NEXT));
         registerReceiver(prevReceiver,new IntentFilter(CustomIntentAction.ACTION_PREV));
@@ -665,6 +659,10 @@ public class Main3Activity extends AppCompatActivity {
        // unregisterReceiver(prevReceiver);
         //unregisterReceiver(nexReceiver);
         super.onStop();
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
     }
 
     @Override

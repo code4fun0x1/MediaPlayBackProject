@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     int seektime=0;
     Handler mHandler;
     Runnable runnable;
-    MediaPlaybackService myService;
+    //MediaPlaybackService myService;
     boolean bound=false;
     Notification status;
     Intent playPauseIntent,nextIntent,prevIntent;
